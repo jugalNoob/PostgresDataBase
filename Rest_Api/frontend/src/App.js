@@ -3,9 +3,13 @@ import {
   createBrowserRouter, RouterProvider
 } from 'react-router-dom'
 
+import Delete from "./page/Delete"
 import Form from "./page/Form"
 import Get from "./page/Get"
 import Home from "./page/Home"
+import Update from './page/Update'
+
+
 const router=createBrowserRouter([  /// install react router https://medium.com/@adebayosilas/introduction-to-react-router-v6-4-6-11-1-f56c7710282e
   {
   path:"/",
@@ -22,6 +26,18 @@ const router=createBrowserRouter([  /// install react router https://medium.com/
       element: <Form/>,
     
       },
+
+      {
+        path:"/update",
+        element: <Update/>,
+      
+        },
+
+        {
+          path:"/delete",
+          element: <Delete/>,
+        
+          },
 
 ])
 

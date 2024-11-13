@@ -1,26 +1,30 @@
- //only change my email  put old email
-  app.put('/update-user/:name', async (req, res) => {
-    const { name } = req.params; // Get the name from the URL
-    const { email } = req.body; // Get the new email from the request body
-  
-    try {
-      // Execute the update query
-      const result = await pool.query(
-        'UPDATE public.users SET email = $1 WHERE name = $2 RETURNING *', // Update query
-        [email, name] // Update the email where the name matches
-      );
-  
-      console.log(result.rows);
-  
-      // Check if any user was updated
-      if (result.rows.length === 0) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      // Respond with the updated user data
-      res.json(result.rows[0]);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+// PUT route to update a user's email
+//http://localhost:3000/update-user/anku sharma
+// {
+    
+    
+//   "email":"lionssharma.@gmail.com"
+//  }
+
+app.put('/update-user/:name', async (req, res) => {
+  const { name } = req.params; // Get the name from the URL
+  const { email } = req.body; // Get the new email from the request body
+
+  try {
+    const result = await pool.query(
+      'UPDATE users SET email = $1 WHERE name = $2 RETURNING *',
+      [email, name]
+    );
+
+    console.log(result.rows);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  });
-  
+
+    res.json(result.rows[0]);
+  } catch (error) {
+
+    res.status(500).json({ error: error.message });
+  }
+});

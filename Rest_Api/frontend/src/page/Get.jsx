@@ -16,9 +16,17 @@ function Get() {
       <h2>Users List</h2>
       <ul>
         {users.map((user, index) => (
-          <li key={index}>
-            Name: {user.name}, Email: {user.email}, Password: {user.password}
-          </li>
+     <>
+
+
+     <h1   key={index}>id::{user.id}</h1>
+     <h1>{user.name}</h1>
+     <h1>{user.email}</h1>
+     <h1>{user.age}</h1>
+     <h1>{user.country}</h1>
+     <h1>{user.gender}</h1>
+     </>
+   
         ))}
       </ul>
     </div>

@@ -18,11 +18,11 @@ app.use(cors(corsOption));
 
 // POST route to add a new user
 app.post('/add-user', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, age , country , gender } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
-      [name, email, password]
+      'INSERT INTO users (name, email , age , country , gender) VALUES ($1, $2, $3 , $4 , $5) RETURNING *',
+      [name, email, age , country , gender]
     );
     console.log(result.rows);
 
@@ -30,8 +30,12 @@ app.post('/add-user', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.error(error.message);
+    console.log(error)
   }
 });
+
+
+
 
 // GET route to fetch all users
 app.get('/Data', async (req, res) => {
@@ -50,21 +54,20 @@ app.get('/Data', async (req, res) => {
 
 // PUT route to update a user's email
 //http://localhost:3000/update-user/anku sharma
-
 // {
     
     
 //   "email":"lionssharma.@gmail.com"
 //  }
 
-app.put('/update-user/:name', async (req, res) => {
-  const { name } = req.params; // Get the name from the URL
-  const { email } = req.body; // Get the new email from the request body
+app.put('/update-user/:id', async (req, res) => {
+  const { id } = req.params; // Get the name from the URL
+  const { name } = req.body; // Get the new email from the request body
 
   try {
     const result = await pool.query(
-      'UPDATE users SET email = $1 WHERE name = $2 RETURNING *',
-      [email, name]
+      'UPDATE users SET name = $1 WHERE id = $2 RETURNING *',
+      [name, id]
     );
 
     console.log(result.rows);
@@ -80,18 +83,26 @@ app.put('/update-user/:name', async (req, res) => {
   }
 });
 
-// DELETE route to delete a user by name
-app.delete('/delete-user/:name', async (req, res) => {
-  const { name } = req.params;
+
+app.delete('/delete-user/:id', async (req, res) => {
+  const { id } = req.params;
+  
   try {
-    const result = await pool.query('DELETE FROM users WHERE name = $1', [name]);
-    console.log(result.rows);
+    const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
+console.log(result)
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
     res.status(204).send(); // 204 No Content, successful deletion
   } catch (error) {
     res.status(500).json({ error: error.message });
+    console.log(error);
   }
 });
+
+
+
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

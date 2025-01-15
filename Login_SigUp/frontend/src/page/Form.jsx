@@ -1,57 +1,54 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
 function Form() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
-  const timeoutRef = useRef(null); // useRef to persist timeout between renders
-  const [count, setCount] = useState(0); // useState to keep track of clicks
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const timeoutRef = useRef(null);
+  const [count, setCount] = useState(0);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the form from submitting
-    setCount(count + 1); // Update count state
-    console.log("Count:", count + 1); // Track click count
+    e.preventDefault();
+    setCount((prevCount) => prevCount + 1); // Correct way to update count
 
-    clearTimeout(timeoutRef.current); // Clear previous timeout if it exists
+    clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(async () => {
       try {
         const response = await fetch("http://localhost:9000/add-user", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name, email, password: pass })
+          body: JSON.stringify({ name, email, password: pass }),
         });
 
         const res = await response.json();
-        if (res.status === 201) {
-          alert("Check your form");
+        if (response.status === 201) {
+          console.log(res)
+          // alert("User added successfully");
         } else {
-          console.log(res, 'user information'); // Assuming 'user' is part of the response
-          // Uncomment and use local storage or navigate as needed
-          // localStorage.setItem("usersdatatoken", res.result.token);
-          // localStorage.setItem("usersdatatokens", res.result.name);
-          // navigate("/");
+          console.error("Error adding user:", res);
         }
       } catch (error) {
         console.error("Error during fetch:", error);
+        alert("Failed to add user. Please try again.");
       }
     }, 2000);
   };
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => clearTimeout(timeoutRef.current);
   }, []);
 
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Enter your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          required
         />
         <br />
         <br />
@@ -60,6 +57,7 @@ function Form() {
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
         <br />
         <br />
@@ -68,11 +66,13 @@ function Form() {
           placeholder="Enter your password"
           value={pass}
           onChange={(e) => setPass(e.target.value)}
+          required
         />
         <br />
         <br />
-        <button onClick={handleSubmit}>Click form</button>
+        <button type="submit">Click form</button>
       </form>
+      <p>Form submitted {count} times</p>
     </div>
   );
 }

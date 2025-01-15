@@ -8,7 +8,8 @@ const auth=require("./jwt/auth")
 const app = express();
 const port = 9000;
 
-
+// react@gmail.com
+//react
 const corsOption = {
     origin: "http://localhost:3000",
     methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
@@ -25,13 +26,12 @@ app.use(express.json());
 app.post('/add-user', async (req, res) => {
     const { name, email, password } = req.body;
 
-    // Basic validation
-    if (!name || !email || !password || typeof password !== "string") {
+    if (!name || !email || !password) {
         return res.status(400).json({ error: "Invalid input data" });
     }
 
     try {
-        // 1. Check if the email already exists in the database
+        // Check if email exists
         const emailQuery = 'SELECT * FROM users WHERE email = $1';
         const emailResult = await pool.query(emailQuery, [email]);
 
@@ -39,22 +39,25 @@ app.post('/add-user', async (req, res) => {
             return res.status(400).json({ error: 'Email is already in use' });
         }
 
-        // 2. Hash the password
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        // 3. Insert the new user into the database
-        const result = await pool.query(
-            'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
-            [name, email, hashedPassword]
-        );
+        // Insert user into database
+        const insertQuery = `
+            INSERT INTO users (name, email, password) 
+            VALUES ($1, $2, $3) 
+            RETURNING *`;
+        const result = await pool.query(insertQuery, [name, email, hashedPassword]);
 
-        console.log(result.rows);
-        res.status(201).json(result.rows[0]); // Send back the new user data
+        console.log("User inserted into database:", result.rows[0]);
+        res.status(201).json(result.rows[0]);
     } catch (error) {
-        res.status(500).json({ error: error.message });
-        console.error("Error saving user:", error.message);
+        console.log(error)
+        console.error("Database error:", error.stack);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 // check with bcript :::::::::::::::::::::::::::::::::::::::::::::::
 

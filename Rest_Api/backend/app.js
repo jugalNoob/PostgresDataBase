@@ -21,7 +21,7 @@ app.post('/add-user', async (req, res) => {
   const { name, email, age , country , gender } = req.body;
   try {
     const result = await pool.query(
-      'INSERT INTO users (name, email , age , country , gender) VALUES ($1, $2, $3 , $4 , $5) RETURNING *',
+      'INSERT INTO uio (name, email , age , country , gender) VALUES ($1, $2, $3 , $4 , $5) RETURNING *',
       [name, email, age , country , gender]
     );
     console.log(result.rows);
@@ -40,7 +40,7 @@ app.post('/add-user', async (req, res) => {
 // GET route to fetch all users
 app.get('/Data', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM users');
+    const result = await pool.query('SELECT * FROM uio');
 
     // Log the rows for debugging
     console.log(result.rows);

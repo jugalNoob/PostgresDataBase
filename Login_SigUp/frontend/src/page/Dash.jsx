@@ -52,3 +52,15 @@ if (data.status === 401 || !data) {
 }
 
 export default Dash;
+
+
+
+// {
+//   "alg": "HS256",
+//   "typ": "JWT"
+// }.{
+//   "user": {
+//     "id": "c3429ae5-4322-4bce-a499-58242b707ecf"
+//   },
+//   "iat": 1737526297,
+//   "exp": 1737529897

@@ -66,7 +66,7 @@ app.put('/update-user/:id', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'UPDATE users SET name = $1 WHERE id = $2 RETURNING *',
+      'UPDATE uio SET name = $1 WHERE id = $2 RETURNING *',
       [name, id]
     );
 
@@ -88,7 +88,7 @@ app.delete('/delete-user/:id', async (req, res) => {
   const { id } = req.params;
   
   try {
-    const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
+    const result = await pool.query('DELETE FROM uio WHERE id = $1', [id]);
 console.log(result)
     if (result.rowCount === 0) {
       return res.status(404).json({ error: 'User not found' });
